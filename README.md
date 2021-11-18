@@ -14,3 +14,9 @@ Extract element content from JSON value.
 If value is not null, enclose JSON with  <></>, else enclose within  < />.
 
 Write a program that reads XML/JSON from standard input and outputs the converted XML/JSON.
+
+## Stage 2/6: Converting attributes
+
+Add attribute conversion.
+
+Write a program that will read an XML/JSON file from disk and convert it to a JSON/XML file.

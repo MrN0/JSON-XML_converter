@@ -1,45 +1,13 @@
 package converter.element;
 
-import java.util.Objects;
+import java.util.Map;
 
-public class Element {
+public interface Element {
 
-	private String name;
-	private String value;
+	String getName();
 
-	public Element(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
+	String getContent();
 
-	public String getName() {
-		return name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, value);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Element other = (Element) obj;
-		return Objects.equals(name, other.name) && Objects.equals(value, other.value);
-	}
-
-	@Override
-	public String toString() {
-		return "Element [name=" + name + ", value=" + value + "]";
-	}
+	Map<String, String> getAttributes();
 
 }

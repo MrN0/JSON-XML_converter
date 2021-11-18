@@ -1,35 +1,50 @@
 package converter.parser;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-import converter.element.Element;
 import converter.exception.InvalidElementException;
 
-public class XmlParser implements Parser {
+public class XmlParser extends AbstractParser {
+	
+	private static final Pattern ELEMENT_NAME_PATTERN;
+	private static final Pattern ELEMENT_CONTENT_PATTERN;
+	private static final Pattern ELEMENT_ATTRIBUTE_PATTERN;
 
-	private static final String INLINE = "<(\\w+)\\/>";
-	private static final String BLOCK = "<(\\w+)\\/?>(.*)<\\/(\\w+)>";
-	private final Pattern inlinePattern;
-	private final Pattern blockPattern;
-
-	public XmlParser() {
-		this.inlinePattern = Pattern.compile(INLINE);
-		this.blockPattern = Pattern.compile(BLOCK);
+	static {
+		ELEMENT_NAME_PATTERN = Pattern.compile(String.format("^<(%s)", ELEMENT_NAME));
+		ELEMENT_CONTENT_PATTERN = Pattern.compile(">(.+)<");
+		ELEMENT_ATTRIBUTE_PATTERN = Pattern.compile(
+				String.format("(%s)\\s*=\\s*\"(%s)\"", ATTRIBUTE_KEY, ATTRIBUTE_VALUE));
 	}
 
 	@Override
-	public Element parse(String document) {
-		var matcher = inlinePattern.matcher(document);
+	protected String getElementName(String document) {
+		var matcher = ELEMENT_NAME_PATTERN.matcher(document);
 		if (matcher.find()) {
-			return new Element(matcher.group(1), null);
+			return matcher.group(1);
 		}
+		throw new InvalidElementException(ERROR_MSG_ELEMENT_NAME_NOT_VALID);
+	}
 
-		matcher = blockPattern.matcher(document);
+	@Override
+	protected String getElementContent(String document) {
+		var matcher = ELEMENT_CONTENT_PATTERN.matcher(document);
 		if (matcher.find()) {
-			return new Element(matcher.group(1), matcher.group(2));
+			return matcher.group(1);
 		}
+		return null;
+	}
 
-		throw new InvalidElementException("ERROR: Invalid XML document!");
+	@Override
+	protected Map<String, String> getElementAttributes(String document) {
+		Map<String, String> attributes = new HashMap<>();
+		var matcher= ELEMENT_ATTRIBUTE_PATTERN.matcher(document);
+		while (matcher.find()) {
+			attributes.put(matcher.group(1), matcher.group(2));
+		}
+		return attributes;
 	}
 
 }
