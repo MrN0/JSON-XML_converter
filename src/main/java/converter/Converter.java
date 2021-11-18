@@ -6,8 +6,8 @@ import converter.parser.Parser;
 
 public class Converter {
 
-	private Parser parser;
-	private Builder builder;
+	private final Parser parser;
+	private final Builder builder;
 
 	public Converter(Parser parser, Builder builder) {
 		this.parser = parser;

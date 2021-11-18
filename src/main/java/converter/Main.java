@@ -1,6 +1,8 @@
 package converter;
 
-import java.util.Scanner;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import converter.builder.JsonBuilder;
 import converter.builder.XmlBuilder;
@@ -11,14 +13,18 @@ import converter.parser.XmlParser;
 public class Main {
 
 	public static void main(String[] args) {
-		String document = getDocumentFromInput();
+		String document;
+		try {
+			document = readFileAsString("test.txt");
+		} catch (IOException e) {
+			System.out.println("Error: Couldn't read input file!");
+			return;
+		}
 		System.out.println(convertDocument(document));
 	}
 
-	private static String getDocumentFromInput() {
-		try (var scanner = new Scanner(System.in)) {
-			return scanner.nextLine();
-		}
+	private static String readFileAsString(String filePath) throws IOException {
+		return new String(Files.readAllBytes(Paths.get(filePath)));
 	}
 
 	private static String convertDocument(String document) {
@@ -38,4 +44,5 @@ public class Main {
 
 		return converter.convert(document);
 	}
+
 }
